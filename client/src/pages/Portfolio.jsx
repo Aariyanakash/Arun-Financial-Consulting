@@ -19,20 +19,39 @@ async function fetchUserRepos(username, setRepos) {
         );
         if (!resp.ok) throw new Error('API error');
         const data = await resp.json();
+        
+        // Filter for specific projects
+        const targetProjects = [
+            'An-Extensive-study-of-Dell-s-LBO-from-Investors-Perspective',
+            'Business-and-Financial-Analysis-of-Hella',
+            'Corporate-Finance',
+            'Quantitative-Finance-and-Financial-Markets'
+        ];
+        
         setRepos(
-            data.filter(
-                r =>
-                    !r.fork &&
-                    r.stargazers_count >= 2 &&
-                    financeKeywords.some(k =>
-                        (r.name + (r.description || '')).toLowerCase().includes(k)
-                    )
-            )
+            data.filter(r => targetProjects.some(proj => r.name.includes(proj)))
         );
     } catch (e) {
         console.warn('Error loading projects:', e);
     }
 }
+
+// Icon mapping for projects
+const projectIcons = {
+    'dell': '📊',
+    'hella': '🏢',
+    'corporate': '💼',
+    'quantitative': '📈'
+};
+
+const getProjectIcon = (repoName) => {
+    const name = repoName.toLowerCase();
+    if (name.includes('dell')) return '📊';
+    if (name.includes('hella')) return '🏢';
+    if (name.includes('corporate')) return '💼';
+    if (name.includes('quantitative')) return '📈';
+    return '📁';
+};
 
 export default function Portfolio() {
     const [repos, setRepos] = useState([]);
@@ -93,101 +112,65 @@ export default function Portfolio() {
                 </div>
             </section>
 
-            {/* Featured Projects Case-Studies */}
-            <section className="py-24 bg-white">
-                <div className="max-w-6xl mx-auto px-6">
-                    <h2 className="text-4xl font-black text-gray-900 text-center mb-12">
-                        Featured Case Studies & Research Projects
-                    </h2>
-                    <div className="grid grid-cols-1 lg:grid-cols-3 gap-12">
-                        {featured.map((p, i) => (
-                            <a
-                                key={i}
-                                href={p.link}
-                                target="_blank"
-                                rel="noopener noreferrer"
-                                className="group block rounded-3xl overflow-hidden shadow-lg transform hover:-translate-y-2 hover:shadow-2xl transition-all duration-500"
-                            >
-                                <div
-                                    className="h-48 bg-cover bg-center"
-                                    style={{ backgroundImage: `url(${p.cover})` }}
-                                />
-                                <div className="p-6 bg-white">
-                                    <h3 className="text-2xl font-bold mb-2 group-hover:text-blue-600">
-                                        {p.title}
-                                    </h3>
-                                    <p className="text-gray-600 mb-3 text-sm leading-relaxed">
-                                        {p.excerpt}
-                                    </p>
-                                    <ul className="list-disc list-inside mb-2 text-sm text-gray-700">
-                                        {p.highlights.map((h, hi) => (
-                                            <li key={hi}>{h}</li>
-                                        ))}
-                                    </ul>
-                                    <span className="inline-flex items-center gap-2 text-blue-500 font-semibold group-hover:gap-4 transition-all">
-                                        View Full Report →
-                                    </span>
-                                </div>
-                            </a>
-                        ))}
-                    </div>
-                </div>
-            </section>
-
-            {/* Recent Projects from User’s Work (Finance Only) */}
+            {/* Recent Projects from User's Work (Finance Only) */}
             {repos.length > 0 && (
                 <section className="py-16 bg-gradient-to-br from-blue-50 via-white to-blue-50">
                     <div className="max-w-5xl mx-auto px-6">
                         <h2 className="text-3xl font-black text-gray-900 mb-8 text-center">
                             Recent Projects & Research Initiatives
                         </h2>
-                        <ul className="space-y-6">
-                            {repos.slice(0, 6).map(r => (
-                                <li
+                        <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
+                            {repos.map(r => (
+                                <a
                                     key={r.id}
-                                    className="p-6 bg-white rounded-2xl shadow-lg hover:shadow-xl transition-shadow duration-300"
+                                    href={r.html_url}
+                                    target="_blank"
+                                    rel="noopener noreferrer"
+                                    className="group block p-8 bg-white rounded-3xl shadow-lg hover:shadow-2xl transform hover:-translate-y-2 transition-all duration-500 overflow-hidden"
                                 >
-                                    <a
-                                        href={r.html_url}
-                                        target="_blank"
-                                        rel="noopener noreferrer"
-                                        className="text-xl font-semibold text-blue-600 hover:underline"
-                                    >
-                                        {r.name}
-                                    </a>
-                                    <div className="mt-1 text-sm text-gray-600">
-                                        {r.description || 'No description available.'}
+                                    <div className="flex items-start gap-6">
+                                        <div className="text-6xl flex-shrink-0">
+                                            {getProjectIcon(r.name)}
+                                        </div>
+                                        <div className="flex-1 min-w-0">
+                                            <h3 className="text-xl font-bold text-blue-600 group-hover:text-blue-700 transition-colors mb-2 break-words">
+                                                {r.name.replace(/-/g, ' ')}
+                                            </h3>
+                                            <p className="text-sm text-gray-600 mb-4 leading-relaxed">
+                                                {r.description || 'Financial analysis and research project'}
+                                            </p>
+                                            <div className="flex flex-wrap gap-3">
+                                                {r.language && (
+                                                    <span className="px-3 py-1 bg-blue-100 text-blue-700 rounded-full text-xs font-semibold">
+                                                        {r.language}
+                                                    </span>
+                                                )}
+                                                <span className="px-3 py-1 bg-yellow-100 text-yellow-700 rounded-full text-xs font-semibold">
+                                                    ⭐ {r.stargazers_count}
+                                                </span>
+                                                {r.updated_at && (
+                                                    <span className="px-3 py-1 bg-gray-100 text-gray-600 rounded-full text-xs font-semibold">
+                                                        {new Date(r.updated_at).toLocaleDateString('en-US', {
+                                                            month: 'short',
+                                                            day: 'numeric',
+                                                            year: 'numeric',
+                                                        })}
+                                                    </span>
+                                                )}
+                                            </div>
+                                        </div>
                                     </div>
-                                    <div className="mt-2 flex flex-wrap gap-3 text-xs text-gray-700">
-                                        {r.language && (
-                                            <span className="px-2 py-1 bg-blue-100 rounded-full">
-                                                {r.language}
-                                            </span>
-                                        )}
-                                        <span className="px-2 py-1 bg-gray-100 rounded-full">
-                                            ★ {r.stargazers_count}
-                                        </span>
-                                        {r.updated_at && (
-                                            <span className="px-2 py-1 bg-gray-100 rounded-full">
-                                                Updated {new Date(r.updated_at).toLocaleDateString('en-US', {
-                                                month: 'short',
-                                                day: 'numeric',
-                                                year: 'numeric',
-                                            })}
-                                            </span>
-                                        )}
-                                    </div>
-                                </li>
+                                </a>
                             ))}
-                        </ul>
-                        <div className="text-center mt-8">
+                        </div>
+                        <div className="text-center mt-12">
                             <a
                                 href="https://github.com/Aariyanakash"
                                 target="_blank"
                                 rel="noopener noreferrer"
-                                className="bg-gradient-to-r from-blue-500 to-purple-600 text-white font-bold py-3 px-6 rounded-2xl shadow-xl hover:shadow-2xl transform hover:scale-105 transition-transform duration-300"
+                                className="bg-gradient-to-r from-blue-500 to-purple-600 text-white font-bold py-4 px-8 rounded-2xl shadow-xl hover:shadow-2xl transform hover:scale-105 transition-all duration-300"
                             >
-                                Explore All Projects
+                                Explore All Projects on GitHub
                             </a>
                         </div>
                     </div>
@@ -207,29 +190,29 @@ export default function Portfolio() {
                             <h3 className="text-2xl font-semibold mb-6">Academic Background</h3>
                             <ul className="space-y-8">
                                 <li className="flex gap-4">
-                                    <div>🎓</div>
+                                    <div className="text-4xl flex-shrink-0">🎓</div>
                                     <div>
                                         <div className="font-semibold text-xl">
-                                            MBA in Corporate Finance
+                                            MSc in Finance and Investments
                                         </div>
                                         <div className="text-sm text-gray-200">
-                                            University of Cairo • 2021–2023
+                                            Berlin school of Business and Innovations • 2022–2024
                                         </div>
                                         <div className="mt-1 text-gray-300">
-                                            Dissertation: Comparative analysis of Islamic vs conventional credit models.
+                                            Dissertation: An Extensive study of Dell's LBO from Investors Perspective.
                                         </div>
                                     </div>
                                 </li>
                                 <li className="flex gap-4">
-                                    <div>📘</div>
+                                    <div className="text-4xl flex-shrink-0">📘</div>
                                     <div>
                                         <div className="font-semibold text-xl">
-                                            B.Sc. in Accounting & Financial Management
+                                            MBA in Financial Management & Human Resources
                                         </div>
                                         <div className="text-sm text-gray-200">
-                                            American University in Cairo • 2018–2022
+                                            University of Madras • 2018–2020
                                         </div>
-                                        <div className="mt-1 text-gray-300">Graduated top 10%, Dean’s List.</div>
+                                        <div className="mt-1 text-gray-300">Graduated top 10%, Dean's List.</div>
                                     </div>
                                 </li>
                             </ul>
@@ -240,19 +223,22 @@ export default function Portfolio() {
                             </h3>
                             <div className="space-y-6">
                                 <div>
-                                    <h4 className="font-semibold text-xl">
-                                        Certificate in Islamic Finance (CIF)
+                                    <h4 className="font-semibold text-xl flex items-center gap-2">
+                                        <span className="text-3xl">📜</span>
+                                        Certificate in Financial Modelling (CIF)
                                     </h4>
                                     <div className="text-sm text-gray-200">IFSB • 2023</div>
                                 </div>
                                 <div>
-                                    <h4 className="font-semibold text-xl">
+                                    <h4 className="font-semibold text-xl flex items-center gap-2">
+                                        <span className="text-3xl">🎯</span>
                                         CFA Level II Candidate
                                     </h4>
                                     <div className="text-sm text-gray-200">Exam scheduled Dec 2025</div>
                                 </div>
                                 <div>
-                                    <h4 className="font-semibold text-xl">
+                                    <h4 className="font-semibold text-xl flex items-center gap-2">
+                                        <span className="text-3xl">💡</span>
                                         FMVA – Financial Modeling & Valuation Analyst
                                     </h4>
                                     <div className="text-sm text-gray-200">Corporate Finance Institute • 2024</div>
@@ -266,15 +252,15 @@ export default function Portfolio() {
             {/* Closing CTA */}
             <section className="py-20 bg-gradient-to-br from-yellow-400 to-orange-500 text-gray-900 text-center">
                 <div className="max-w-xl mx-auto px-6">
-                    <h2 className="text-5xl font-black mb-4">Let’s Collaborate</h2>
+                    <h2 className="text-5xl font-black mb-4">Let's Collaborate</h2>
                     <p className="text-lg mb-6">
                         Interested in consulting, case-studies, or quantitative modeling? Reach out via
                         email or book a strategy session.
                     </p>
-                    <div className="flex justify-center gap-6">
+                    <div className="flex justify-center gap-6 flex-wrap">
                         <a
                             href="mailto:arunjakash@gmail.com"
-                            className="bg-white text-gray-900 font-bold py-4 px-8 rounded-2xl shadow-xl hover:shadow-2xl hover:scale-105 transition-transform duration-300"
+                            className="bg-white text-gray-900 font-bold py-4 px-8 rounded-2xl shadow-xl hover:shadow-2xl hover:scale-105 transition-all duration-300"
                         >
                             Contact Arun Akash
                         </a>
@@ -282,7 +268,7 @@ export default function Portfolio() {
                             href="https://aariyanakash.github.io/portfolio/"
                             target="_blank"
                             rel="noopener noreferrer"
-                            className="bg-gray-900 text-white font-semibold py-4 px-8 rounded-2xl shadow-lg hover:shadow-xl hover:scale-105 transition-transform duration-300"
+                            className="bg-gray-900 text-white font-semibold py-4 px-8 rounded-2xl shadow-lg hover:shadow-xl hover:scale-105 transition-all duration-300"
                         >
                             Visit My Website
                         </a>

@@ -9,6 +9,7 @@ import {
     achievements,
     myApproachSteps
 } from "../assets/assets.js";
+import arun from "../assets/Aa.png";
 
 const Home = () => {
     const [scrollY, setScrollY] = useState(0);
@@ -164,7 +165,7 @@ const Home = () => {
                                             </svg>
                                         </div>
                                         <div>
-                                            <h4 className="font-bold text-gray-900">Master’s in Finance & Investment</h4>
+                                            <h4 className="font-bold text-gray-900">Master's in Finance & Investment</h4>
                                             <p className="text-gray-600">Licensed fiduciary advisor</p>
                                         </div>
                                     </div>
@@ -187,13 +188,16 @@ const Home = () => {
                         <div className="order-1 lg:order-2 relative">
                             <div className="absolute inset-0 bg-gradient-to-r from-blue-200 to-purple-200 rounded-3xl transform rotate-3"></div>
                             <div className="relative bg-white p-8 rounded-3xl shadow-2xl transform -rotate-1 hover:rotate-0 transition-transform duration-500">
-                                <div className="h-80 bg-gradient-to-br from-blue-100 to-purple-100 rounded-2xl flex items-center justify-center">
-                                    <div className="text-center">
-                                        <div className="w-32 h-32 bg-gradient-to-r from-blue-500 to-purple-500 rounded-full mx-auto mb-4 flex items-center justify-center">
-                                            <span className="text-4xl text-white">👨‍💼</span>
-                                        </div>
-                                        <h3 className="text-2xl font-bold text-gray-900 mb-2">John Smith, CFP®</h3>
-                                        <p className="text-gray-600">Your Trusted Financial Advisor</p>
+                                <div className="h-80 bg-gradient-to-br from-blue-100 to-purple-100 rounded-2xl overflow-hidden relative">
+                                    <img 
+                                        src={arun}
+                                        alt="Arun Akash Jawahar" 
+                                        className="absolute inset-0 w-full h-full object-cover"
+                                    />
+                                    <div className="absolute inset-0 bg-gradient-to-t from-black/40 to-transparent"></div>
+                                    <div className="absolute inset-0 flex flex-col items-center justify-end text-white pb-6">
+                                        <h3 className="text-2xl font-bold mb-2">Arun Akash J, MSc Finance</h3>
+                                        <p className="text-gray-100">Your Trusted Financial Advisor</p>
                                     </div>
                                 </div>
                             </div>
@@ -265,7 +269,7 @@ const Home = () => {
                             Smart Planning <span className="text-emerald-600">Simple Solution</span>
                         </h2>
                         <p className="text-xl text-gray-600 max-w-2xl mx-auto">
-                            Financial planning doesn’t need to be complicated — let’s make it work for you.
+                            Financial planning doesn't need to be complicated — let's make it work for you.
                         </p>
                     </div>
 

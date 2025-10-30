@@ -691,12 +691,12 @@ export const financeKeywords = [
 export const skills = [
     'Financial Modeling (DCF, M&A, DDM)',
     'Quantitative & Statistical Analysis',
-    'Islamic Finance & Sharia Compliance',
+    'Business and Financial Analysis',
     'Corporate Strategy & Risk Management',
 ];
 
 export const skillBars = [
-    { name: 'Islamic Finance & Sharia Compliance', level: 92 },
+    { name: 'Business and Financial Analysis', level: 92 },
     { name: 'Financial Modeling (DCF, M&A)', level: 95 },
     { name: 'Quantitative Analysis & Simulation', level: 88 },
     { name: 'Corporate Strategy & Risk Planning', level: 90 },
