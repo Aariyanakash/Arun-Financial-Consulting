@@ -1,0 +1,3 @@
+/* Show/hide scrollbars globally (optional) */
+::-webkit-scrollbar { display: none; }
+html { scrollbar-width: none; } /* Firefox */
