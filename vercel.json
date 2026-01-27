@@ -1,32 +1,28 @@
 {
   "version": 2,
-  "buildCommand": "cd client && npm run build",
-  "installCommand": "npm install && cd client && npm install && cd ..",
+  "buildCommand": "cd client && npm run build && cd .. && ls -la",
+  "installCommand": "npm install && cd client && npm install",
+  "env": {
+    "NODE_ENV": "production"
+  },
   "builds": [
     {
-      "src": "client/dist",
-      "use": "@vercel/static"
-    },
-    {
       "src": "server/server.js",
-      "use": "@vercel/node",
-      "config": {
-        "zeroConfig": true
-      }
+      "use": "@vercel/node"
     }
   ],
   "routes": [
     {
-      "src": "/api(.*)",
-      "dest": "/server/server.js"
+      "src": "/api/(.*)",
+      "dest": "server/server.js"
     },
     {
-      "src": "/public(.*)",
-      "dest": "/server/server.js"
+      "src": "/public/(.*)",
+      "dest": "server/server.js"
     },
     {
       "src": "/(.*)",
-      "dest": "/client/dist/index.html"
+      "dest": "server/server.js"
     }
   ]
 }
