@@ -29,7 +29,11 @@ if (!dbConnected) {
 app.use(cors());
 app.use(express.json());
 
-// API routes FIRST (must be before static/catch-all)
+// Health check endpoints FIRST
+app.get('/health', (req, res) => res.json({ status: 'OK', method: 'GET' }));
+app.post('/health', (req, res) => res.json({ status: 'OK', method: 'POST' }));
+
+// API routes
 app.use('/api/admin', adminRouter);
 app.use('/api/blog', blogRouter);
 
@@ -37,12 +41,11 @@ app.use('/api/blog', blogRouter);
 app.get('/public/timeslots', getPublicAvailableTimeSlots);
 app.post('/public/contact', sendContactEmail);
 
+// Home endpoint
+app.get('/', (req, res) => res.send('App is working'));
+
 // Then serve static files from client build
 app.use(express.static(path.join(__dirname, '../client/dist')));
-
-app.get('/health', (req, res) => res.json({ status: 'OK', method: 'GET' }));
-app.post('/health', (req, res) => res.json({ status: 'OK', method: 'POST' }));
-app.get('/', (req, res) => res.send('App is working'));
 
 // Serve React app for all other routes (SPA fallback) - MUST BE LAST
 app.get('*', (req, res) => {
