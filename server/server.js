@@ -15,32 +15,48 @@ const __dirname = path.dirname(__filename);
 
 const app = express();
 
-await connectDB();
+// Connect to DB once
+let dbConnected = false;
+if (!dbConnected) {
+  try {
+    await connectDB();
+    dbConnected = true;
+  } catch (err) {
+    console.error('DB Connection Error:', err);
+  }
+}
 
 app.use(cors());
 app.use(express.json());
 
-// Serve static files from client build
-app.use(express.static(path.join(__dirname, '../client/dist')));
-
-app.get('/', (req, res) => res.send('App is working'));
-
-// Admin & Blog routes (admin is protected by auth inside router)
+// API routes FIRST (must be before static/catch-all)
 app.use('/api/admin', adminRouter);
 app.use('/api/blog', blogRouter);
 
-// Public, unauthenticated endpoints for the front-end:
+// Public endpoints
 app.get('/public/timeslots', getPublicAvailableTimeSlots);
 app.post('/public/contact', sendContactEmail);
 
-// Serve React app for all other routes (SPA fallback)
+// Then serve static files from client build
+app.use(express.static(path.join(__dirname, '../client/dist')));
+
+app.get('/health', (req, res) => res.json({ status: 'OK', method: 'GET' }));
+app.post('/health', (req, res) => res.json({ status: 'OK', method: 'POST' }));
+app.get('/', (req, res) => res.send('App is working'));
+
+// Serve React app for all other routes (SPA fallback) - MUST BE LAST
 app.get('*', (req, res) => {
   res.sendFile(path.join(__dirname, '../client/dist/index.html'));
 });
 
-const port = process.env.PORT || 3000;
-app.listen(port, () => {
-    console.log(`Server is running on port: ${port}`);
-});
+// Development mode
+if (process.env.NODE_ENV !== 'production') {
+    const port = process.env.PORT || 3000;
+    app.listen(port, () => {
+        console.log(`Server is running on port: ${port}`);
+    });
+}
 
+// Export for both Vercel serverless and standard Node
 export default app;
+export const handler = app;
