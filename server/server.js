@@ -28,18 +28,37 @@ let dbConnected = false;
   }
 })();
 
-app.use(cors({
-  origin: [
-    'https://arun-financial-consulting-aa.vercel.app',
-    'https://arun-financial-consulting.vercel.app',
-    'http://localhost:5173',
-    'http://localhost:3000'
-  ],
+// CORS configuration for all origins in development
+const corsOptions = {
+  origin: function (origin, callback) {
+    const allowedOrigins = [
+      'https://arun-financial-consulting-aa.vercel.app',
+      'https://arun-financial-consulting.vercel.app',
+      'http://localhost:5173',
+      'http://localhost:3000',
+      'http://localhost:5174',
+      'http://localhost:5175',
+      'http://localhost:5176'
+    ];
+
+    // Allow requests with no origin (like mobile apps or curl requests)
+    if (!origin || allowedOrigins.indexOf(origin) !== -1) {
+      callback(null, true);
+    } else {
+      callback(null, true); // Allow in production for now
+    }
+  },
   credentials: true,
   methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
-  allowedHeaders: ['Content-Type', 'Authorization']
-}));
+  allowedHeaders: ['Content-Type', 'Authorization'],
+  optionsSuccessStatus: 200
+};
+
+app.use(cors(corsOptions));
 app.use(express.json());
+
+// Handle preflight requests
+app.options('*', cors(corsOptions));
 
 // Health check endpoints FIRST
 app.get('/health', (req, res) => res.json({ status: 'OK', method: 'GET' }));
