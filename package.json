@@ -9,9 +9,5 @@
     "build": "cd client && npm run build",
     "start": "cd server && npm run start",
     "server": "cd server && npm run server"
-  },
-  "workspaces": [
-    "client",
-    "server"
-  ]
+  }
 }

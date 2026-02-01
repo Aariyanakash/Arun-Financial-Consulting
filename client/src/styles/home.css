@@ -1,5 +1,3 @@
-@reference "tailwindcss/utilities";
-
 /* HERO */
 .hero-section { @apply relative h-screen w-full flex items-center justify-center overflow-hidden; }
 .hero-bg { @apply absolute inset-0 bg-gradient-to-br from-slate-900 via-blue-900 to-indigo-900; }

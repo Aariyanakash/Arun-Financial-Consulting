@@ -11,5 +11,4 @@
 /* Base font */
 * { font-family: var(--font-sans); }
 
-/* Optional compatibility theme var */
 @theme { --color-primary: #5044E5; }
