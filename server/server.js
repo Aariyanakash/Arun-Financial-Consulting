@@ -17,14 +17,16 @@ const app = express();
 
 // Connect to DB once
 let dbConnected = false;
-if (!dbConnected) {
-  try {
-    await connectDB();
-    dbConnected = true;
-  } catch (err) {
-    console.error('DB Connection Error:', err);
+(async () => {
+  if (!dbConnected) {
+    try {
+      await connectDB();
+      dbConnected = true;
+    } catch (err) {
+      console.error('DB Connection Error:', err);
+    }
   }
-}
+})();
 
 app.use(cors());
 app.use(express.json());
@@ -45,11 +47,12 @@ app.post('/public/contact', sendContactEmail);
 app.get('/', (req, res) => res.send('App is working'));
 
 // Then serve static files from client build
-app.use(express.static(path.join(__dirname, '../client/dist')));
+const distPath = path.join(__dirname, '../client/dist');
+app.use(express.static(distPath));
 
 // Serve React app for all other routes (SPA fallback) - MUST BE LAST
 app.get('*', (req, res) => {
-  res.sendFile(path.join(__dirname, '../client/dist/index.html'));
+  res.sendFile(path.join(distPath, 'index.html'));
 });
 
 // Development mode

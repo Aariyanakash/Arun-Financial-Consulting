@@ -1,0 +1,17 @@
+{
+  "name": "arun-financial-consulting",
+  "version": "1.0.0",
+  "description": "Arun Financial Consulting Application",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "dev": "cd client && npm run dev",
+    "build": "cd client && npm run build",
+    "start": "cd server && npm run start",
+    "server": "cd server && npm run server"
+  },
+  "workspaces": [
+    "client",
+    "server"
+  ]
+}

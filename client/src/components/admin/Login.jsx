@@ -19,7 +19,6 @@ const Login = () => {
             if (data.success) {
                 setToken(data.token);
                 localStorage.setItem("token", data.token);
-                axios.defaults.headers.common['Authorization'] = `Bearer ${data.token}`;
                 toast.success("Login successful!");
             } else {
                 toast.error(data.message);
