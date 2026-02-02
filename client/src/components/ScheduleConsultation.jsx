@@ -32,7 +32,8 @@ const ScheduleConsultation = () => {
     useEffect(() => {
         const loadSlots = async () => {
             try {
-                const res = await fetch("/public/timeslots?active=true");
+                const baseUrl = import.meta.env.VITE_BASE_URL || '';
+                const res = await fetch(`${baseUrl}/public/timeslots?active=true`);
                 if (!res.ok) throw new Error(`HTTP ${res.status}`);
                 const payload = await res.json();
 
