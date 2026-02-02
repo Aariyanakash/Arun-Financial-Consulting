@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react";
 
-const ScheduleConsultation = () => {
+const ScheduleConsultation = ({ onClose }) => {
     const [selectedSlot, setSelectedSlot] = useState(null);
     const [clientName, setClientName] = useState("");
     const [clientEmail, setClientEmail] = useState("");
@@ -356,6 +356,19 @@ const ScheduleConsultation = () => {
 
     return (
         <div className="fixed inset-0 bg-gradient-to-br from-purple-900 via-blue-900 to-indigo-900 flex items-center justify-center p-4 relative overflow-hidden z-50">
+            {/* Close Button */}
+            {onClose && (
+                <button
+                    onClick={onClose}
+                    className="absolute top-6 right-6 z-20 p-3 rounded-xl bg-white/10 border border-white/20 text-white hover:bg-white/15 hover:border-purple-400/50 transition-all duration-300 hover:scale-105"
+                    aria-label="Close consultation booking"
+                >
+                    <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
+                    </svg>
+                </button>
+            )}
+
             {/* Animated Background Elements */}
             <div className="absolute inset-0 overflow-hidden">
                 <div className="absolute -top-40 -right-40 w-80 h-80 bg-purple-500 rounded-full mix-blend-multiply filter blur-xl opacity-20 animate-pulse"></div>

@@ -445,16 +445,7 @@ const Home = () => {
             {showScheduleModal && (
                 <div className="fixed inset-0 bg-black/50 backdrop-blur-sm z-50 flex items-center justify-center p-0">
                     <div className="bg-white rounded-none shadow-2xl w-screen h-screen overflow-auto relative">
-                        <button
-                            onClick={() => setShowScheduleModal(false)}
-                            className="absolute top-6 right-6 z-10 text-gray-400 hover:text-gray-600 transition-colors"
-                            aria-label="Close schedule consultation modal"
-                        >
-                            <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M6 18L18 6M6 6l12 12" />
-                            </svg>
-                        </button>
-                        <ScheduleConsultation />
+                        <ScheduleConsultation onClose={() => setShowScheduleModal(false)} />
                     </div>
                 </div>
             )}

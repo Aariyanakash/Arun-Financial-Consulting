@@ -43,16 +43,10 @@ const Navbar = () => {
                     >
                         <div className="relative">
                             <img
-                             src={assets.logo}
-                                alt="logo"
-                             className="w-12 h-auto relative z-10" // Fixed width, auto height
-                            />
-                            {/* <img
                                 src={assets.logo}
                                 alt="logo"
-                                className="w-16 sm:w-24 xl:w-28 relative z-10"
-                                style={{ minWidth: '4rem' }}
-                            /> */}
+                                className="w-12 h-auto relative z-10"
+                            />
                             <div className="absolute inset-0 bg-gradient-to-r from-blue-400/20 to-purple-400/20 rounded-xl blur-lg opacity-0 group-hover:opacity-100 transition-opacity duration-300 -z-10"></div>
                         </div>
                     </div>
