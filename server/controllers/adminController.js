@@ -120,27 +120,39 @@ export const createTimeSlots = async (req, res) => {
 
 /**
  * PUBLIC getter for embeddable widget:
- * - Future dates only
- * - isActive: true
- * - Has capacity (max > current)
+ * Query params:
+ * - active=true|false (optional) -> filter by isActive (default: true)
+ * - includePast=true|false (default: false) -> include past dates
+ * - includeFull=true|false (default: true) -> include slots at capacity
  */
 export const getPublicAvailableTimeSlots = async (req, res) => {
     try {
+        const { active = 'true', includePast = 'false', includeFull = 'true' } = req.query;
+
         const now = new Date();
         const today = new Date(now.getFullYear(), now.getMonth(), now.getDate());
 
-        const docs = await TimeSlot.find({
-            date: { $gte: today },
-            isActive: true
-        })
+        const filter = {};
+
+        // Filter by isActive status
+        if (active === 'true') filter.isActive = true;
+        if (active === 'false') filter.isActive = false;
+
+        // Filter by date
+        if (includePast !== 'true') {
+            filter.date = { $gte: today };
+        }
+
+        const docs = await TimeSlot.find(filter)
             .sort({ date: 1, startTime: 1 })
             .lean();
 
-        const available = docs.filter(
-            d => Number(d.maxParticipants) > Number(d.currentParticipants || 0)
-        );
+        // Filter by capacity if needed
+        const result = includeFull === 'true'
+            ? docs
+            : docs.filter(d => Number(d.maxParticipants) > Number(d.currentParticipants || 0));
 
-        return res.json({ success: true, timeSlots: available });
+        return res.json({ success: true, timeSlots: result });
     } catch (error) {
         return res.json({ success: false, message: error.message });
     }
