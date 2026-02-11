@@ -34,6 +34,8 @@ const corsOptions = {
     const allowedOrigins = [
       'https://arun-financial-consulting-aa.vercel.app',
       'https://arun-financial-consulting.vercel.app',
+      'https://arunfinancialconsulting.me',
+      'https://www.arunfinancialconsulting.me',
       'http://localhost:5173',
       'http://localhost:3000',
       'http://localhost:5174',
