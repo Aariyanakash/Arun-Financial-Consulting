@@ -18,6 +18,7 @@ import Navbar from './components/Navbar';
 import Services from "./pages/Services";
 import Contact from "./pages/Contact";
 import TimeSlots from "./pages/admin/TimeSlots.jsx";
+import { SpeedInsights } from '@vercel/speed-insights/react';
 
 const App = () => {
     const { token } = useAppContext();
@@ -50,6 +51,7 @@ const App = () => {
                 </Routes>
             </main>
             {!hideNavAndFooter && <Footer />}
+            <SpeedInsights />
         </div>
     )
 }
